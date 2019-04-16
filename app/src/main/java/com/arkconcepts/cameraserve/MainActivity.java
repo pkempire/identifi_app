@@ -1,11 +1,13 @@
 package com.arkconcepts.cameraserve;
 
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +17,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
@@ -40,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     private static HashMap<Integer, List<Camera.Size>> cameraSizes = new HashMap<>();
     private static ReentrantReadWriteLock frameLock = new ReentrantReadWriteLock();
     private static byte[] jpegFrame;
+    private ServerConnection cmdConn;
+
 
     public static byte[] getJpegFrame() {
         try {
@@ -113,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         holder = cameraView.getHolder();
         holder.addCallback(this);
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
     }
 
     @Override
@@ -177,11 +184,13 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         }
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String res = preferences.getString("resolution", "640x480");
+        //String res = preferences.getString("resolution", "640x480");
+        String res = "1280x720";
         String[] resParts = res.split("x");
 
         Camera.Parameters p = camera.getParameters();
         p.setPreviewSize(Integer.parseInt(resParts[0]), Integer.parseInt(resParts[1]));
+        p.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
         camera.setParameters(p);
 
         try {
@@ -262,4 +271,32 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
         setJpegFrame(previewStream);
     }
+
+    public void sendActionToServer(View view) {
+
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.rg_ServerAction);
+        int selectedId = radioGroup.getCheckedRadioButtonId();
+
+        // find the radiobutton by returned id
+        RadioButton radioButton = (RadioButton) findViewById(selectedId);
+
+        Toast toastSend = Toast.makeText(getApplicationContext(),radioButton.getText(),Toast.LENGTH_LONG);
+        toastSend.show();
+
+        String temp = (radioButton.getText()).toString();
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        AndroidApplication aa = ((AndroidApplication)getApplicationContext());
+        ServerConnectionSynchronous cmdConn2 = new ServerConnectionSynchronous();
+        cmdConn2.Open(aa.IP,aa.commandPort);
+        if (cmdConn2.isConnected()){
+            cmdConn2.Write(temp);
+            cmdConn2.close();
+        }
+
+    }
+
 }
+

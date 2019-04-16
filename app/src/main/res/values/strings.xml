@@ -1,5 +1,14 @@
 <resources>
-    <string name="app_name">CameraServe</string>
+    <string name="app_name">CameraServesr</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="dummy_content">
+
+        Swipe Up/Down to Select\n\n
+        Double-Tap to Confirm \n\n
+        Long Press to Undo
+
+
+    </string>
+
 </resources>

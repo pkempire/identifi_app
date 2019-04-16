@@ -7,7 +7,11 @@
     android:fitsSystemWindows="true"
     tools:context="com.arkconcepts.cameraserve.MainActivity">
 
-    <include layout="@layout/content_main" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/flipButton"
@@ -23,6 +27,52 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:layout_margin="16dp"
-        android:src="@android:drawable/ic_menu_preferences" />
+        android:src="@android:drawable/ic_menu_preferences"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="right|top" />
 
+    <RadioGroup
+        android:id="@+id/rg_ServerAction"
+        android:layout_width="500dp"
+        android:layout_height="325dp"
+        app:layout_anchor="@+id/rg_ServerAction"
+        app:layout_anchorGravity="left|bottom">
+
+        <RadioButton
+            android:id="@+id/rad_ImageCaptioning"
+            android:layout_width="700dp"
+            android:layout_height="50dp"
+            android:layout_weight="5"
+            android:checked="true"
+            android:text="Image Captioning" />
+
+        <RadioButton
+            android:id="@+id/rad_FaceRecognition"
+            android:layout_width="700dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:text="Facial Recognition" />
+
+        <RadioButton
+            android:id="@+id/rad_DocumentOcr"
+            android:layout_width="700dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:text="Document OCR" />
+
+        <RadioButton
+            android:id="@+id/rad_MoneyRecognition"
+            android:layout_width="700dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:text="Money Recognition" />
+
+        <Button
+            android:id="@+id/but_SendToServer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="sendActionToServer"
+            android:text="Send To Server" />
+    </RadioGroup>
 </android.support.design.widget.CoordinatorLayout>
