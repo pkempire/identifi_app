@@ -11,6 +11,7 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -185,10 +186,19 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         //String res = preferences.getString("resolution", "640x480");
-        String res = "1280x720";
+        String res = "1920x1080";
         String[] resParts = res.split("x");
 
         Camera.Parameters p = camera.getParameters();
+        List<Camera.Size> sizes = p.getSupportedPreviewSizes();
+
+// Iterate through all available resolutions and choose one.
+// The chosen resolution will be stored in mSize.
+        Camera.Size mSize;
+        for (Camera.Size size : sizes) {
+            Log.i("LVB", "Available resolution: "+size.width+" "+size.height);
+        }
+
         p.setPreviewSize(Integer.parseInt(resParts[0]), Integer.parseInt(resParts[1]));
         p.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
         camera.setParameters(p);
