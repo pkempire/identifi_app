@@ -4,6 +4,10 @@
         android:defaultValue="8080"
         android:key="port"
         android:title="Port number" />
+    <EditTextPreference
+        android:defaultValue="192.168.0.23"
+        android:key="ServerIP"
+        android:title="Server IP Address" />
     <ListPreference
         android:defaultValue="0"
         android:key="cam"

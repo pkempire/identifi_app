@@ -169,6 +169,9 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         aboveLockScreen = preferences.getBoolean("above_lock_screen", aboveLockScreen);
         Boolean allIps = preferences.getBoolean("allow_all_ips", false);
         MjpegServer.setAllIpsAllowed(allIps);
+        String serverIP = preferences.getString("ServerIP", "192.168.0.23");
+        AndroidApplication aa = ((AndroidApplication)getApplicationContext());
+        aa.IP = serverIP;
     }
 
     private void startPreview() {
@@ -289,8 +292,9 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
         // find the radiobutton by returned id
         RadioButton radioButton = (RadioButton) findViewById(selectedId);
-
-        Toast toastSend = Toast.makeText(getApplicationContext(),radioButton.getText(),Toast.LENGTH_LONG);
+        String buttonText = radioButton.getText().toString();
+        String buttonTextFirstLetter = buttonText.substring(0,1);
+        Toast toastSend = Toast.makeText(getApplicationContext(),buttonTextFirstLetter,Toast.LENGTH_LONG);
         toastSend.show();
 
         String temp = (radioButton.getText()).toString();
@@ -302,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         ServerConnectionSynchronous cmdConn2 = new ServerConnectionSynchronous();
         cmdConn2.Open(aa.IP,aa.commandPort);
         if (cmdConn2.isConnected()){
-            cmdConn2.Write(temp);
+            cmdConn2.Write(buttonTextFirstLetter);
             cmdConn2.close();
         }
 
